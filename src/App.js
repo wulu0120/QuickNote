@@ -1,21 +1,14 @@
 import React, {Component} from "react";
-import {Container, List, Fab, withStyles} from "@material-ui/core";
-import {Add} from "@material-ui/icons";
-import Note from "./components/Note";
-
-const styles = {
-  fab: {
-    position: 'absolute',
-    bottom: "2rem",
-    right: "2rem",
-  }
-};
-
+import {Container} from "@material-ui/core";
+import DisplayNotes from "./pages/DisplayNotes";
+import AddNote from "./pages/AddNote";
+import {Route, Switch} from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      showHomepage: true,
       notes:[
         {
           id: "5c83c052-60da-425f-a302-9d4735a9d6ae",
@@ -44,23 +37,29 @@ class App extends Component {
     });
   };
 
+  changePage = () => {
+    this.setState((state) => {
+      return {
+        showHomepage: !state.showHomepage,
+      };
+    });
+  };
 
   render() {
-    const {notes} = this.state;
+    const { notes } = this.state;
     return (
       <Container>
-        <List>
-          {notes.map((note, index) => {
-            return <Note note={note} key={index} deleteNote = {this.deleteNote} />
-          })}
-        </List>
-
-        <Fab aria-label={"Add"} className={this.props.classes.fab}>
-          <Add />
-        </Fab>
+        <Switch>
+          <Route exact path="/">
+            <DisplayNotes notes={notes} deleteNote={this.deleteNote} />
+          </Route>
+          <Route path="/add">
+            <AddNote />
+          </Route>
+        </Switch>
       </Container>
     );
   }
 }
 
-export default withStyles(styles)(App);
+export default App;
